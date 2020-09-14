@@ -21,7 +21,7 @@ const ProductEditMode = ({id, name, stock, price, image, createdByImg, setEditMo
     const [updateProduct] = useMutation(EDIT_PRODUCT);
 
     return (
-        <>
+        <div className="animate__animated animate__fadeIn">
             <Formik
                 initialValues={{name, stock, price}}
                 onSubmit={(values, formikHelpers) => {
@@ -95,7 +95,7 @@ const ProductEditMode = ({id, name, stock, price, image, createdByImg, setEditMo
                     </Form>
                 )}
             </Formik>
-        </>
+        </div>
     );
 };
 

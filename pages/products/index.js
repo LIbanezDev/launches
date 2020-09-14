@@ -28,20 +28,4 @@ const IndexProducts = () => {
     );
 };
 
-export async function getStaticProps() {
-
-    const apolloClient = initializeApollo()
-
-    await apolloClient.query({
-        query: ALL_PRODUCTS_QUERY,
-    })
-
-    return {
-        props: {
-            initialApolloState: apolloClient.cache.extract(),
-        },
-        revalidate: 1,
-    }
-}
-
 export default IndexProducts;

@@ -4,6 +4,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {Grid} from '@material-ui/core';
 import Products from "./Products";
 import ProductsForm from "./ProductsForm";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,9 +42,6 @@ export default function ProductsList({user}) {
 
     const {loading, data, refetch} = useQuery(ALL_PRODUCTS_QUERY)
 
-    if (loading) return <div>Loading</div>
-
-    const {products} = data
 
     return (
         <>
@@ -51,11 +49,16 @@ export default function ProductsList({user}) {
                 <ProductsForm user={user} updateList={refetch}/>
             </Grid>
             <Grid container item xs={12} sm={6} md={7} lg={10} spacing={1} className={classes.card}>
-                {products.map((p, index) => (
-                    <Grid key={index} item xs={12} sm={3}>
-                        <Products {...p} refetch={refetch}/>
+                {loading ?
+                    <Grid item xs={12} sm={3}>
+                        <CircularProgress/>
                     </Grid>
-                ))
+                    :
+                    data?.products.map((p, index) => (
+                        <Grid key={index} item xs={12} sm={3}>
+                            <Products {...p} refetch={refetch}/>
+                        </Grid>
+                    ))
                 }
             </Grid>
         </>

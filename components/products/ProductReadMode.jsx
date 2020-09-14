@@ -44,7 +44,7 @@ const ProductReadMode = ({
     }
 
     return (
-        <div className="animate__animated animate__backInLeft">
+        <div className="animate__animated animate__fadeIn">
             <CardMedia
                 component="img"
                 alt="Contemplative Reptile"
