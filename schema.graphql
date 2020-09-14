@@ -1,0 +1,187 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
+
+interface MutationAuthResponse {
+    code: String!
+    message: String
+    success: Boolean!
+}
+
+type BookTripsResponse implements MutationAuthResponse {
+    code: String!
+    message: String
+    success: Boolean!
+    tripsAdded: [Int]
+}
+
+type CUDProductResponse implements MutationAuthResponse {
+    code: String!
+    message: String
+    product: Product
+    success: Boolean!
+}
+
+type CancelTripResponse implements MutationAuthResponse {
+    code: String!
+    message: String
+    success: Boolean!
+    trip: Launch
+}
+
+type File {
+    encoding: String!
+    filename: String!
+    mimetype: String!
+}
+
+type Launch {
+    id: ID!
+    isBooked: Boolean
+    mission: Mission
+    rocket: Rocket
+    site: String
+}
+
+type LaunchConnection {
+    cursor: String!
+    hasMore: Boolean!
+    launches: [Launch]!
+}
+
+type LoginResponse implements MutationAuthResponse {
+    code: String!
+    message: String
+    success: Boolean!
+    token: String
+    user: User
+}
+
+type MedicPartTime {
+    contract_type: String!
+    name: String!
+    rut: ID!
+    specialism: String!
+}
+
+type MedicResident {
+    name: String!
+    office: String!
+    phone: Int!
+    rut: ID!
+    specialism: String!
+    workday: String
+}
+
+type Mission {
+    missionPatch(size: PatchSize): String
+    name: String
+}
+
+type Mutation {
+    bookTrips(launchIds: [ID]!): BookTripsResponse!
+    cancelTrip(launchId: ID!): CancelTripResponse!
+    createProduct(data: ProductInput!): CUDProductResponse
+    deleteProduct(id: ID!): CUDProductResponse
+    login(email: String!, password: String!): LoginResponse!
+    loginGoogle(token: String!): LoginResponse!
+    register(age: Int!, email: String!, name: String!, password: String!): RegisterAndMeResponse!
+    singleUpload(file: Upload!): File!
+    updateProduct(data: ProductInput!, id: ID!): CUDProductResponse
+}
+
+type Product {
+    createdAt: String!
+    createdAtFormated: String
+    createdByImg: String
+    createdByName: String!
+    id: ID!
+    image: String
+    name: String!
+    price: Int!
+    stock: Int!
+    updatedAt: String!
+    updatedAtFormated: String
+}
+
+type ProductsResponse implements MutationAuthResponse {
+    code: String!
+    message: String
+    products: [Product]
+    success: Boolean!
+}
+
+type Query {
+    launch(id: ID!): Launch
+    launches(
+        "If you add a cursor here, it will only return results _after_ this cursor"
+        after: String,
+        "The number of results to show. Must be >= 1. Default = 20"
+        pageSize: Int
+    ): LaunchConnection!
+    me: RegisterAndMeResponse
+    partTimeMedics: [MedicPartTime]
+    product(id: ID!): Product
+    products: [Product]
+    residentMedics: [MedicResident]
+    uploads: [File]
+}
+
+type RegisterAndMeResponse implements MutationAuthResponse {
+    code: String!
+    message: String
+    success: Boolean!
+    user: User
+}
+
+type Rocket {
+    id: ID!
+    name: String
+    type: String
+}
+
+type Subscription {
+    userRequested(age: Int): User
+}
+
+type User {
+    age: Int!
+    createdAt: String
+    createdAtFormated: String
+    email: String!
+    friends: [User]
+    google: Boolean!
+    id: ID!
+    image: String!
+    name: String!
+    trips: [Launch]!
+    updatedAt: String
+    updatedAtFormated: String
+}
+
+enum CacheControlScope {
+    PRIVATE
+    PUBLIC
+}
+
+enum PatchSize {
+    LARGE
+    SMALL
+}
+
+input ProductInput {
+    createdByImg: String
+    createdByName: String
+    image: String
+    name: String
+    price: Int
+    stock: Int
+}
+
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload

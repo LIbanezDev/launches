@@ -1,36 +1,21 @@
-import App from '../components/App'
-import InfoBox from '../components/InfoBox'
-import Header from '../components/Header'
-import Submit from '../components/Submit'
-import PostList, {
-  ALL_POSTS_QUERY,
-  allPostsQueryVars,
-} from '../components/PostList'
-import { initializeApollo } from '../lib/apolloClient'
+import React from 'react';
+import {useFetchUser} from "../lib/user";
+import Layout from "../components/Layout";
 
-const IndexPage = () => (
-  <App>
-    <Header />
-    <InfoBox>ℹ️ This page shows how to use SSG with Apollo.</InfoBox>
-    <Submit />
-    <PostList />
-  </App>
-)
+const Index = () => {
+    const { user, loading } = useFetchUser()
 
-export async function getStaticProps() {
-  const apolloClient = initializeApollo()
+    return (
+        <Layout user={user} loading={loading}>
+            {loading && <p>Loading login info...</p>}
+            {!loading && !user && (
+                <>
+                    <h2> Bienvenido! </h2>
+                </>
+            )}
+            {user && <pre style={{fontSize:"2rem"}}> {JSON.stringify(user, null, 4)}</pre>}
+        </Layout>
+    );
+};
 
-  await apolloClient.query({
-    query: ALL_POSTS_QUERY,
-    variables: allPostsQueryVars,
-  })
-
-  return {
-    props: {
-      initialApolloState: apolloClient.cache.extract(),
-    },
-    revalidate: 1,
-  }
-}
-
-export default IndexPage
+export default Index;
