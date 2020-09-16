@@ -25,15 +25,20 @@ const GET_PRODUCT_BY_ID = gql`
 const ProductId = () => {
     const {query} =  useRouter()
     const {user, loading:userLoading} = useFetchUser()
+
     const {data, loading} = useQuery(GET_PRODUCT_BY_ID, {
         variables: {
             id: query.id
         }
     })
-    if(loading) return <pre> Loading.... </pre>
+
     return (
         <Layout user={user} loading={userLoading}>
-            <pre style={{fontSize:"2rem"}}> {JSON.stringify(data, null, 4)}</pre>
+            <pre style={{fontSize:"2rem"}}>
+                {
+                    loading ? "Loading..." : JSON.stringify(data, null, 4)
+                }
+            </pre>
         </Layout>
     );
 };

@@ -8,7 +8,7 @@ import {CssBaseline} from "@material-ui/core";
 import Router from 'next/router';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import Header from "../components/Header";
+import {SnackbarProvider} from 'notistack';
 
 Router.events.on('routeChangeStart', () => {
     NProgress.start()
@@ -39,8 +39,11 @@ export default function App({Component, pageProps}) {
             </Head>
             <ThemeProvider theme={theme}>
                 <ApolloProvider client={apolloClient}>
-                    <CssBaseline />
-                    <Component {...pageProps} />
+                    <SnackbarProvider maxSnack={5} anchorOrigin={{vertical:"top", horizontal:"right"}}
+                                      autoHideDuration={3000}>
+                        <CssBaseline/>
+                        <Component {...pageProps} />
+                    </SnackbarProvider>
                 </ApolloProvider>
             </ThemeProvider>
         </React.Fragment>

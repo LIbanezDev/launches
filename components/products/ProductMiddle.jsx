@@ -6,8 +6,10 @@ import ProductReadMode from "./ProductReadMode";
 import ProductEditMode from "./ProductEditMode";
 
 
-export default function Products(props) {
+export default function ProductMiddle(props) {
+
     const [editMode, setEditMode] = useState(false)
+
     const [alertData, setAlertData] = useState({})
 
     return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -9,6 +9,8 @@ import {gql, useMutation} from "@apollo/client";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import Link from "next/link";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {useSnackbar} from "notistack";
 
 const DELETE_PRODUCT = gql`
     mutation DeleteProduct($id: ID!){
@@ -20,27 +22,28 @@ const DELETE_PRODUCT = gql`
     }
 `;
 
-const ProductReadMode = ({
-                             id, name, stock, price, image, createdByName, createdByImg, createdAtFormated, updatedAtFormated,
-                             setEditMode, setAlertData, refetch
-                         }) => {
+const ProductReadMode = (
+    {
+        id, name, stock, price, image, createdByName, createdByImg, createdAtFormated, updatedAtFormated,
+        setEditMode, setAlertData, refetch
+    }) => {
 
     const [deleteProduct] = useMutation(DELETE_PRODUCT);
+    const [isDeleting, setIsDeleting] = useState(false)
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleDeleteProduct = async () => {
+        setIsDeleting(true)
         const {data: {deleteProduct: resp}} = await deleteProduct({
             variables: {
                 id
             }
         })
         if (Number(resp.code) === 200 && resp.success === true) {
-            refetch()
-            setAlertData({
-                open: true,
-                msg: "Producto eliminado!",
-                variant: "error"
-            })
+            await refetch()
         }
+        setIsDeleting(false)
+        enqueueSnackbar('Producto eliminado', {variant:"error"})
     }
 
     return (
@@ -70,7 +73,11 @@ const ProductReadMode = ({
                 <Button startIcon={<EditIcon/>} size="small" color="primary" onClick={() => setEditMode(true)}>
                     Editar
                 </Button>
-                <Button startIcon={<DeleteIcon/>} size="small" color="primary" onClick={handleDeleteProduct}>
+                <Button
+                    startIcon={isDeleting ? <CircularProgress size={24} color="secondary" /> : <DeleteIcon/>}
+                    size="small"
+                    color="primary"
+                    onClick={handleDeleteProduct}>
                     Eliminar
                 </Button>
                 <Link href={`/products/${id}`}>

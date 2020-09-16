@@ -4,6 +4,8 @@ import {gql, useMutation} from "@apollo/client";
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import {Field, Form, Formik} from 'formik';
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {useSnackbar} from "notistack";
 
 
 const EDIT_PRODUCT = gql`
@@ -17,11 +19,12 @@ const EDIT_PRODUCT = gql`
 `;
 
 const ProductEditMode = ({id, name, stock, price, image, createdByImg, setEditMode, setAlertData, refetch}) => {
+    const { enqueueSnackbar } = useSnackbar();
 
     const [updateProduct] = useMutation(EDIT_PRODUCT);
 
     return (
-        <div className="animate__animated animate__fadeIn">
+        <>
             <Formik
                 initialValues={{name, stock, price}}
                 onSubmit={(values, formikHelpers) => {
@@ -31,17 +34,13 @@ const ProductEditMode = ({id, name, stock, price, image, createdByImg, setEditMo
                             data: values
                         }
                     })
-                        .then(res => {
-                            setAlertData({
-                                open: true,
-                                msg: "Producto editado!",
-                                variant: "warning"
-                            })
-                            refetch()
+                        .then(async res => {
+                            await refetch()
+                            enqueueSnackbar('Producto editado!', {variant:"success"})
                             setEditMode(false)
                         })
                 }}>
-                {({values, errors, isSubmitting, isValidating}) => (
+                {({values, isSubmitting}) => (
                     <Form autoComplete="off">
                         <CardMedia
                             component="img"
@@ -71,7 +70,7 @@ const ProductEditMode = ({id, name, stock, price, image, createdByImg, setEditMo
                         <CardActions>
                             <Button
                                 type="submit"
-                                startIcon={<SaveIcon/>}
+                                startIcon={isSubmitting ? <CircularProgress size={24} /> : <SaveIcon/>}
                                 size="small"
                                 color="primary"
                                 disabled={
@@ -81,7 +80,7 @@ const ProductEditMode = ({id, name, stock, price, image, createdByImg, setEditMo
                                     price === values.price)
                                 }
                             >
-                                Guardar
+                                 Guardar
                             </Button>
                             <Button
                                 startIcon={<CancelIcon/>}
@@ -95,7 +94,7 @@ const ProductEditMode = ({id, name, stock, price, image, createdByImg, setEditMo
                     </Form>
                 )}
             </Formik>
-        </div>
+        </>
     );
 };
 

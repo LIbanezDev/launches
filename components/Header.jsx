@@ -33,8 +33,11 @@ export default function Header({user, loading}) {
                 <Link href="/launches">
                     <Button color="inherit"> Launches </Button>
                 </Link>
-                <Link href="/subscriptions">
-                    <Button color="inherit"> Subscriptions </Button>
+                <Link href="/chat">
+                    <Button color="inherit"> Chat </Button>
+                </Link>
+                <Link href="/log-t">
+                    <Button color="inherit"> Tests </Button>
                 </Link>
                 {!loading &&
                 (user ?

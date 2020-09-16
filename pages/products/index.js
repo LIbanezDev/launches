@@ -5,6 +5,8 @@ import {initializeApollo} from "../../lib/apolloClient";
 import ProductsList, {ALL_PRODUCTS_QUERY} from "../../components/products/ProductsList";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Grid from "@material-ui/core/Grid";
+import PaginationComponent from "../../components/PaginationComponent";
+
 
 const useStyles = makeStyles(theme => ({
     container: {

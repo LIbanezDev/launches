@@ -61,20 +61,15 @@ type LoginResponse implements MutationAuthResponse {
     user: User
 }
 
-type MedicPartTime {
-    contract_type: String!
-    name: String!
-    rut: ID!
-    specialism: String!
-}
-
-type MedicResident {
-    name: String!
-    office: String!
-    phone: Int!
-    rut: ID!
-    specialism: String!
-    workday: String
+type Message {
+    content: String!
+    createdAt: String!
+    createdAtFormated: String!
+    from: ID!
+    fromData: User
+    id: ID!
+    to: ID!
+    toData: User
 }
 
 type Mission {
@@ -89,7 +84,9 @@ type Mutation {
     deleteProduct(id: ID!): CUDProductResponse
     login(email: String!, password: String!): LoginResponse!
     loginGoogle(token: String!): LoginResponse!
+    reactToMessage(content: String!, messageId: ID!): ReactToMessageResponse!
     register(age: Int!, email: String!, name: String!, password: String!): RegisterAndMeResponse!
+    sendMessage(content: String!, to: ID!): SendMessageResponse!
     singleUpload(file: Upload!): File!
     updateProduct(data: ProductInput!, id: ID!): CUDProductResponse
 }
@@ -124,11 +121,26 @@ type Query {
         pageSize: Int
     ): LaunchConnection!
     me: RegisterAndMeResponse
-    partTimeMedics: [MedicPartTime]
+    messages(to: ID!): [Message]
     product(id: ID!): Product
     products: [Product]
-    residentMedics: [MedicResident]
     uploads: [File]
+    user: User
+    users: [User]
+}
+
+type ReactToMessageResponse implements MutationAuthResponse {
+    code: String!
+    message: String
+    reaction: Reaction
+    success: Boolean!
+}
+
+type Reaction {
+    content: String!
+    createdAt: String!
+    id: ID!
+    message: Message!
 }
 
 type RegisterAndMeResponse implements MutationAuthResponse {
@@ -144,8 +156,16 @@ type Rocket {
     type: String
 }
 
+type SendMessageResponse implements MutationAuthResponse {
+    code: String!
+    message: String
+    messageCreated: Message
+    success: Boolean!
+}
+
 type Subscription {
-    userRequested(age: Int): User
+    newMessage: Message
+    newReaction: Reaction
 }
 
 type User {

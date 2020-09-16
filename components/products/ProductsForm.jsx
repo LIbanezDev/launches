@@ -1,10 +1,11 @@
 import React, {useState} from "react";
-import {Box, Button, Card, CardContent, FormGroup, MenuItem, TextField, Typography} from '@material-ui/core';
+import {Box, Button, Card, CardContent, FormGroup, TextField, Typography} from '@material-ui/core';
 import {ErrorMessage, Field, Form, Formik} from 'formik';
 import {number, object, string} from 'yup';
-import {makeStyles} from "@material-ui/core/styles";
 import {gql, useMutation} from '@apollo/client';
-import AlertSnackbar from "../AlertSnackbar";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import UploadIcon from "@material-ui/icons/CloudUpload";
+import {useSnackbar} from "notistack";
 
 const ADD_PRODUCT = gql`
     mutation CREATE_PRODUCT($data: ProductInput!){
@@ -23,14 +24,14 @@ const initialValues = {
     image: 'https://longsshotokan.com/wp-content/uploads/2017/04/default-image-620x600.jpg',
 };
 
-const ProductsForm = ({user, updateList}) => {
+const ProductsForm = ({user, refetch}) => {
     const [addProduct] = useMutation(ADD_PRODUCT)
     const [alertData, setAlertData] = useState({})
+    const {enqueueSnackbar} = useSnackbar()
 
     return (
         <>
-            <AlertSnackbar {...alertData} setAlertData={setAlertData}/>
-            <div className="animate__animated animate__bounceIn">
+            <div className="animate__animated animate__fadeIn">
                 <Card elevation={5}>
                     <CardContent>
                         <Typography variant="h5">Create Product</Typography>
@@ -43,32 +44,27 @@ const ProductsForm = ({user, updateList}) => {
                                     image: string().required('Imagen es obligatoria!').url("Debe ser una url!")
                                 })
                             }
-                            initialValues={initialValues} onSubmit={(values, formikHelpers) => {
+                            initialValues={initialValues} onSubmit={async (values, formikHelpers) => {
                             values = {
                                 ...values,
                                 createdByName: `${user.given_name} ${user.family_name}`,
                                 createdByImg: user.picture
                             }
-                            addProduct({
-                                variables: {
-                                    data: values
-                                }
-                            })
-                                .then(res => {
-                                    const {data: {createProduct: resp}} = res
-                                    if (Number(resp.code) === 201 && resp.success === true) {
-                                        updateList()
-                                        formikHelpers.resetForm()
-                                        setAlertData({
-                                            open: true,
-                                            msg: "Producto agregado!",
-                                            variant: "success"
-                                        })
+                            try {
+                                const {data: {createProduct: resp}} = await addProduct({
+                                    variables: {
+                                        data: values
                                     }
                                 })
-                                .catch(err => {
-                                    console.log('No se pudo agregar producto' + err)
-                                })
+                                if (Number(resp.code) === 201 && resp.success === true) {
+                                    await refetch()
+                                    formikHelpers.resetForm()
+                                    formikHelpers.setErrors({})
+                                    enqueueSnackbar('Producto agregado', {variant:"success"})
+                                }
+                            } catch (e) {
+                                console.log("No se pudo agregar producto - error + " + e)
+                            }
                         }}>
                             {({values, errors, isSubmitting, isValidating}) => (
                                 <Form autoComplete="off">
@@ -100,6 +96,7 @@ const ProductsForm = ({user, updateList}) => {
                                         variant="contained"
                                         type="submit"
                                         color="primary"
+                                        startIcon={isSubmitting ? <CircularProgress size={24} /> : <UploadIcon/>}
                                         disabled={values.name === '' || isSubmitting || isValidating || Object.keys(errors).length > 0}>
                                         Crear
                                     </Button>
