@@ -1,9 +1,8 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import {AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
+import {AppBar, Button, IconButton, Toolbar, Typography} from '@material-ui/core';
 import Link from "next/link";
 import Avatar from "@material-ui/core/Avatar";
-import {useRouter} from "next/router";
 
 const useStyles = makeStyles((theme) => ({
     menuButton: {
@@ -18,13 +17,10 @@ const useStyles = makeStyles((theme) => ({
 export default function Header({user, loading}) {
 
     const classes = useStyles();
-    const {replace, reload} = useRouter()
+
     const handleLogout = () => {
         localStorage.removeItem('token')
-        replace('/')
-            .then(res => {
-                reload()
-            })
+        window.location = "/"
     }
 
     return (
