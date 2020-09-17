@@ -25,7 +25,7 @@ const DELETE_PRODUCT = gql`
 const ProductReadMode = (
     {
         id, name, stock, price, image, createdByName, createdByImg, createdAtFormated, updatedAtFormated,
-        setEditMode, setAlertData, refetch
+        setEditMode, refetch
     }) => {
 
     const [deleteProduct] = useMutation(DELETE_PRODUCT);

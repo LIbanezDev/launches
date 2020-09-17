@@ -18,7 +18,9 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const IndexProducts = () => {
+
     const {user, loading} = useFetchUser({required: true})
+
     const classes = useStyles()
 
     return (

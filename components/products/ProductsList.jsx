@@ -55,18 +55,12 @@ export default function ProductsList({user}) {
                     </Grid>
                     :
                     <>
-                        <Grid item xs={12}>
-                            <PaginationComponent totalPages={4}/>
-                        </Grid>
                         {
                             data?.products.map((p, index) => (
                                 <Grid key={index} item xs={12} sm={3}>
                                     <ProductMiddle {...p} refetch={refetch}/>
                                 </Grid>))
                         }
-                        <Grid item xs={12}>
-                            <PaginationComponent totalPages={4}/>
-                        </Grid>
                     </>
                 }
             </Grid>

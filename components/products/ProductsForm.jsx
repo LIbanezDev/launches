@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {Box, Button, Card, CardContent, FormGroup, TextField, Typography} from '@material-ui/core';
 import {ErrorMessage, Field, Form, Formik} from 'formik';
 import {number, object, string} from 'yup';
@@ -6,6 +6,8 @@ import {gql, useMutation} from '@apollo/client';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import UploadIcon from "@material-ui/icons/CloudUpload";
 import {useSnackbar} from "notistack";
+import UploadFile from "../UploadFile";
+
 
 const ADD_PRODUCT = gql`
     mutation CREATE_PRODUCT($data: ProductInput!){
@@ -26,7 +28,7 @@ const initialValues = {
 
 const ProductsForm = ({user, refetch}) => {
     const [addProduct] = useMutation(ADD_PRODUCT)
-    const [alertData, setAlertData] = useState({})
+
     const {enqueueSnackbar} = useSnackbar()
 
     return (
@@ -47,8 +49,8 @@ const ProductsForm = ({user, refetch}) => {
                             initialValues={initialValues} onSubmit={async (values, formikHelpers) => {
                             values = {
                                 ...values,
-                                createdByName: `${user.given_name} ${user.family_name}`,
-                                createdByImg: user.picture
+                                createdByName: `${user.name} `,
+                                createdByImg: user.image
                             }
                             try {
                                 const {data: {createProduct: resp}} = await addProduct({
@@ -60,7 +62,7 @@ const ProductsForm = ({user, refetch}) => {
                                     await refetch()
                                     formikHelpers.resetForm()
                                     formikHelpers.setErrors({})
-                                    enqueueSnackbar('Producto agregado', {variant:"success"})
+                                    enqueueSnackbar('Producto agregado', {variant: "success"})
                                 }
                             } catch (e) {
                                 console.log("No se pudo agregar producto - error + " + e)
@@ -96,7 +98,7 @@ const ProductsForm = ({user, refetch}) => {
                                         variant="contained"
                                         type="submit"
                                         color="primary"
-                                        startIcon={isSubmitting ? <CircularProgress size={24} /> : <UploadIcon/>}
+                                        startIcon={isSubmitting ? <CircularProgress size={24}/> : <UploadIcon/>}
                                         disabled={values.name === '' || isSubmitting || isValidating || Object.keys(errors).length > 0}>
                                         Crear
                                     </Button>

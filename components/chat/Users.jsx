@@ -73,7 +73,7 @@ function a11yProps(index) {
     };
 }
 
-export default function Users() {
+export default function Users({user:userProps}) {
 
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
@@ -99,7 +99,7 @@ export default function Users() {
     const handleChange = (event, newValue) => {
         getMessages({
             variables: {
-                to: newValue + 1
+                to: 3
             }
         })
         setValue(newValue);
@@ -116,7 +116,7 @@ export default function Users() {
                 className={classes.tabs}
             >
                 {
-                    data?.users.filter(user => user.id !== "2").map((user, index) => {
+                    data?.users.filter(user => user.id !== userProps.id).map((user, index) => {
                         return <Tab key={index} label={user.name} {...a11yProps(index)} />
                     })
                 }

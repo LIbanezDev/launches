@@ -1,12 +1,19 @@
 import React from "react";
 import {Box, Button, Card, CardContent, FormGroup, TextField, Typography} from '@material-ui/core';
 import {Field, Form, Formik} from 'formik';
-import {gql, useMutation} from '@apollo/client';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import UploadIcon from "@material-ui/icons/CloudUpload";
 import {useSnackbar} from "notistack";
-import {useFetchUser} from "../../lib/user";
+import {gql, useMutation} from "@apollo/client";
 
+const loginMutation = gql`
+    mutation LOGIN($email: String!, $pass: String!){
+        login(email: $email, password: $pass){
+            success
+            token
+        }
+    }
+`
 
 const initialValues = {
     email: 'lucas.one@usm.cl',
@@ -14,7 +21,7 @@ const initialValues = {
 };
 
 const LoginC = () => {
-
+    const [login] = useMutation(loginMutation)
     const {enqueueSnackbar} = useSnackbar();
 
     return (
@@ -25,23 +32,23 @@ const LoginC = () => {
                         <Typography variant="h5">Create Product</Typography>
                         <Formik
                             initialValues={initialValues} onSubmit={async (values, formikHelpers) => {
-                            const res = await fetch('/api/login',{
-                                method: 'POST',
-                                body: JSON.stringify(values)
+
+                            const {data:{login:res}} = await login({
+                                variables: values
                             })
 
-                            const json = await res.json()
-
-                            if (json.ok) {
+                            if (res.success) {
                                 enqueueSnackbar('Bienvenido a la aplicación!', {
                                     variant: 'success'
                                 })
+                                localStorage.setItem('token', res.token)
                                 window.location = '/'
                             } else {
                                 enqueueSnackbar('Contraseña incorrecta', {
                                     variant: 'error'
                                 })
                             }
+
                         }}>
                             {({values, errors, isSubmitting, isValidating}) => (
                                 <Form autoComplete="off">

@@ -87,7 +87,7 @@ type Mutation {
     reactToMessage(content: String!, messageId: ID!): ReactToMessageResponse!
     register(age: Int!, email: String!, name: String!, password: String!): RegisterAndMeResponse!
     sendMessage(content: String!, to: ID!): SendMessageResponse!
-    singleUpload(file: Upload!): File!
+    singleUpload(file: Upload!): Boolean!
     updateProduct(data: ProductInput!, id: ID!): CUDProductResponse
 }
 

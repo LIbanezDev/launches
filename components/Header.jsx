@@ -3,6 +3,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
 import Link from "next/link";
 import Avatar from "@material-ui/core/Avatar";
+import {useRouter} from "next/router";
 
 const useStyles = makeStyles((theme) => ({
     menuButton: {
@@ -17,6 +18,14 @@ const useStyles = makeStyles((theme) => ({
 export default function Header({user, loading}) {
 
     const classes = useStyles();
+    const {replace, reload} = useRouter()
+    const handleLogout = () => {
+        localStorage.removeItem('token')
+        replace('/')
+            .then(res => {
+                reload()
+            })
+    }
 
     return (
         <AppBar position="static">
@@ -43,9 +52,7 @@ export default function Header({user, loading}) {
                                 <Link href="/products">
                                     <Button color="inherit"> Products </Button>
                                 </Link>
-                                <Link href="/api/logout">
-                                    <Button color="inherit"> Logout </Button>
-                                </Link>
+                                <Button color="inherit" onClick={handleLogout}> Logout </Button>
                             </>
                         ) : (
                             <Link href="/login">

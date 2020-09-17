@@ -9,7 +9,7 @@ const Chat = () => {
 
     return (
         <Layout user={user} loading={loading}>
-            <Users />
+            {!loading && <Users user={user} /> }
         </Layout>
     );
 };
