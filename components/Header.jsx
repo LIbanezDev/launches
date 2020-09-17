@@ -22,10 +22,10 @@ export default function Header({user, loading}) {
         <AppBar position="static">
             <Toolbar>
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <Avatar variant="rounded" alt="Remy Sharp" src="/graph.png"/>
+                    <Avatar variant="rounded" alt="Remy Sharp" src={user ? user.image : '/graph.png'}/>
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
-                    OnlyVeg
+                    {user ? "Logged as " + user.name : "OnlyVeg"}
                 </Typography>
                 <Link href="/">
                     <Button color="inherit"> Index </Button>
@@ -35,9 +35,6 @@ export default function Header({user, loading}) {
                 </Link>
                 <Link href="/chat">
                     <Button color="inherit"> Chat </Button>
-                </Link>
-                <Link href="/log-t">
-                    <Button color="inherit"> Tests </Button>
                 </Link>
                 {!loading &&
                 (user ?
@@ -51,7 +48,7 @@ export default function Header({user, loading}) {
                                 </Link>
                             </>
                         ) : (
-                            <Link href="/api/login">
+                            <Link href="/login">
                                 <Button color="inherit"> Login </Button>
                             </Link>
                         )

@@ -76,18 +76,13 @@ function a11yProps(index) {
 export default function Users() {
 
     const classes = useStyles();
-    const [value, setValue] = React.useState(-1);
-    const {data, loading} = useQuery(GET_USERS)
     const {enqueueSnackbar} = useSnackbar();
+
+    const [value, setValue] = React.useState(1);
+    const {data, loading} = useQuery(GET_USERS)
     const {data: newMessage, loading: loadingSub} = useSubscription(MESSAGES_SUBSCRIPTION);
 
-    const [getMessages, {data: messages, loading: loadingMessages}] = useLazyQuery(GET_MESSAGES, {
-        context: {
-            headers: {
-                Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6Ikx1Y2FzIElnbmFjaW8gMiIsImlhdCI6MTYwMDIwNzM3OSwiZXhwIjoxNjAwMjkzNzc5fQ.Nwb-hp0wn3FK6B4-cD24QI2prKlV1SLcBmOIIegDXhU"
-            }
-        }
-    })
+    const [getMessages, {data: messages, loading: loadingMessages}] = useLazyQuery(GET_MESSAGES)
 
     useEffect(() => {
         if (newMessage) {
@@ -110,7 +105,6 @@ export default function Users() {
         setValue(newValue);
     };
 
-
     return (
         <div className={classes.root}>
             <Tabs
@@ -122,8 +116,8 @@ export default function Users() {
                 className={classes.tabs}
             >
                 {
-                    data?.users.map((user, index) => {
-                        return <Tab key={index} label={user.name} {...a11yProps(index)}/>
+                    data?.users.filter(user => user.id !== "2").map((user, index) => {
+                        return <Tab key={index} label={user.name} {...a11yProps(index)} />
                     })
                 }
             </Tabs>

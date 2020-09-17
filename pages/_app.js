@@ -21,6 +21,7 @@ Router.events.on('routerChangeError', () => {
 })
 
 export default function App({Component, pageProps}) {
+
     const apolloClient = useApollo(pageProps.initialApolloState)
 
     React.useEffect(() => {

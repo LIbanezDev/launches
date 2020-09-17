@@ -1,28 +1,20 @@
-import React, {useState} from "react";
+import React from "react";
 import {Box, Button, Card, CardContent, FormGroup, TextField, Typography} from '@material-ui/core';
 import {Field, Form, Formik} from 'formik';
 import {gql, useMutation} from '@apollo/client';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import UploadIcon from "@material-ui/icons/CloudUpload";
 import {useSnackbar} from "notistack";
+import {useFetchUser} from "../../lib/user";
 
-const LOGIN_USER = gql`
-    mutation LOGIN($email: String!, $pass: String!){
-        login(email: $email, password: $pass) {
-            success
-            token
-        }
-    }
-`;
 
 const initialValues = {
-    email: 'lucas.vergara@usm.cl',
-    pass: 'passwordOne',
+    email: 'lucas.one@usm.cl',
+    pass: 'pass1',
 };
 
 const LoginC = () => {
 
-    const [login] = useMutation(LOGIN_USER)
     const {enqueueSnackbar} = useSnackbar();
 
     return (
@@ -33,14 +25,18 @@ const LoginC = () => {
                         <Typography variant="h5">Create Product</Typography>
                         <Formik
                             initialValues={initialValues} onSubmit={async (values, formikHelpers) => {
-                            const {data: {login: res}} = await login({
-                                variables: values
+                            const res = await fetch('/api/login',{
+                                method: 'POST',
+                                body: JSON.stringify(values)
                             })
 
-                            if (res.success) {
-                                enqueueSnackbar('Contraseña correcta! Cookie agregada', {
+                            const json = await res.json()
+
+                            if (json.ok) {
+                                enqueueSnackbar('Bienvenido a la aplicación!', {
                                     variant: 'success'
                                 })
+                                window.location = '/'
                             } else {
                                 enqueueSnackbar('Contraseña incorrecta', {
                                     variant: 'error'
