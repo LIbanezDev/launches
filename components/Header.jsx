@@ -46,6 +46,7 @@ export default function Header({user, loading}) {
                 <Link href="/chat">
                     <Button color="inherit"> Chat </Button>
                 </Link>
+
                 {!loading &&
                 (user ?
                         (
