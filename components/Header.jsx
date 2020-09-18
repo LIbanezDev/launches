@@ -3,6 +3,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {AppBar, Button, IconButton, Toolbar, Typography} from '@material-ui/core';
 import Link from "next/link";
 import Avatar from "@material-ui/core/Avatar";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
     menuButton: {
@@ -27,7 +28,11 @@ export default function Header({user, loading}) {
         <AppBar position="static">
             <Toolbar>
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <Avatar variant="rounded" alt="Remy Sharp" src={user ? user.image : '/graph.png'}/>
+                    {loading ?
+                        <CircularProgress color="secondary"/>
+                        :
+                        <Avatar variant="rounded" alt="Remy Sharp" src={user ? user.image : '/graph.png'}/>
+                    }
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
                     {user ? "Logged as " + user.name : "OnlyVeg"}

@@ -29,7 +29,7 @@ const LoginC = () => {
             <div className="animate__animated animate__fadeIn">
                 <Card elevation={5}>
                     <CardContent>
-                        <Typography variant="h5">Create Product</Typography>
+                        <Typography variant="h5">Login</Typography>
                         <Formik
                             initialValues={initialValues} onSubmit={async (values, formikHelpers) => {
 
