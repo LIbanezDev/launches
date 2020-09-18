@@ -25,9 +25,11 @@ export async function getStaticProps() {
         variables: allLaunchesQueryVar,
     })
 
+    const cache = apolloClient.cache.extract()
+
     return {
         props: {
-            initialApolloState: apolloClient.cache.extract(),
+            initialApolloState: cache,
         },
         revalidate: 1,
     }

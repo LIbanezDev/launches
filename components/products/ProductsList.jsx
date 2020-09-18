@@ -1,11 +1,9 @@
-import {gql, useQuery} from '@apollo/client'
 import React from "react";
 import {makeStyles} from '@material-ui/core/styles';
 import {Grid} from '@material-ui/core';
 import ProductMiddle from "./ProductMiddle";
 import ProductsForm from "./ProductsForm";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import PaginationComponent from "../PaginationComponent";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,27 +19,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const ALL_PRODUCTS_QUERY = gql`
-    query getProducts {
-        products {
-            id
-            name
-            stock
-            price
-            image
-            createdByName
-            createdByImg
-            createdAtFormated
-            updatedAtFormated
-        }
-    }
-`
 
-export default function ProductsList({user}) {
+export default function ProductsList({user, data, loading, refetch}) {
 
     const classes = useStyles();
-
-    const {loading, data, refetch} = useQuery(ALL_PRODUCTS_QUERY)
 
     return (
         <>
