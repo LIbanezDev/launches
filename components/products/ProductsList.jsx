@@ -26,7 +26,7 @@ export default function ProductsList({user, data, loading, refetch}) {
 
     return (
         <>
-            <Grid item xs={12} sm={6} md={5} lg={2}>
+            <Grid item xs={12} sm={6} md={5} lg={2} style={{marginRight: "6px"}}>
                 <ProductsForm user={user} refetch={refetch}/>
             </Grid>
             <Grid container item xs={12} sm={6} md={7} lg={10} spacing={1} className={classes.card}>
@@ -35,14 +35,10 @@ export default function ProductsList({user, data, loading, refetch}) {
                         <CircularProgress/>
                     </Grid>
                     :
-                    <>
-                        {
-                            data?.products.map((p, index) => (
-                                <Grid key={index} item xs={12} sm={3}>
-                                    <ProductMiddle {...p} refetch={refetch}/>
-                                </Grid>))
-                        }
-                    </>
+                    data?.products.map((p, index) => (
+                        <Grid key={index} item xs={12} sm={3}>
+                            <ProductMiddle {...p} refetch={refetch}/>
+                        </Grid>))
                 }
             </Grid>
         </>
