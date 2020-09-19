@@ -28,6 +28,7 @@ const initialValues = {
 const Register = () => {
 
     const [register] = useMutation(REGISTER_MUTATION)
+
     const {enqueueSnackbar} = useSnackbar();
 
     return (
@@ -35,7 +36,7 @@ const Register = () => {
             <div className="animate__animated animate__fadeIn">
                 <Card elevation={5}>
                     <CardContent>
-                        <Typography variant="h5"> Register </Typography>
+                        <Typography variant="srOnly"> Register </Typography>
                         <Formik
                             initialValues={initialValues}
                             onSubmit={async (values, formikHelpers) => {
@@ -81,7 +82,7 @@ const Register = () => {
                                         disabled={isSubmitting}
                                         type="submit"
                                     >
-                                        Registrar
+                                        Register
                                     </Button>
                                 </Form>
                             )}

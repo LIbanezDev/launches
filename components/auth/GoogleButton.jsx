@@ -1,10 +1,11 @@
 import React from 'react';
 import GoogleLogin from 'react-google-login';
 import {gql, useMutation} from "@apollo/client";
+import {useSnackbar} from "notistack";
 
 const LOGIN_GOOGLE_MUTATION = gql`
-    mutation loginWithGoogle($tokenId:String!) {
-                loginGoogle(token:$tokenId) {
+    mutation loginWithGoogle($token:String!) {
+                loginGoogle(token:$token) {
                     message
                     success
                     code
@@ -23,16 +24,23 @@ const LOGIN_GOOGLE_MUTATION = gql`
 
 const GoogleButton = ({onSuccess}) => {
     const [loginGoogle, { loading }] = useMutation(LOGIN_GOOGLE_MUTATION)
+    const {enqueueSnackbar} = useSnackbar();
 
-    const responseGoogle = response => {
-        loginGoogle({
-            variables: { tokenId:response.tokenId }
+    const responseGoogle = async response => {
+        const {data:{loginGoogle:res}} = await loginGoogle({
+            variables: { token:response.tokenId }
         })
-            .then(({data}) => onSuccess({
-                logged:true,
-                ...data.loginGoogle
-            }))
-            .catch(err => console.log(err))
+        if (res.success) {
+            enqueueSnackbar('Bienvenido a la aplicación!', {
+                variant: 'success'
+            })
+            localStorage.setItem('token', res.token)
+            window.location = '/'
+        } else {
+            enqueueSnackbar('Contraseña incorrecta', {
+                variant: 'error'
+            })
+        }
     }
     return (
         <GoogleLogin

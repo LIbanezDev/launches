@@ -2,9 +2,9 @@ import React from "react";
 import {Box, Button, Card, CardContent, FormGroup, TextField, Typography} from '@material-ui/core';
 import {Field, Form, Formik} from 'formik';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import UploadIcon from "@material-ui/icons/CloudUpload";
 import {useSnackbar} from "notistack";
 import {gql, useMutation} from "@apollo/client";
+import GoogleButton from "./GoogleButton";
 
 const loginMutation = gql`
     mutation LOGIN($email: String!, $pass: String!){
@@ -29,11 +29,11 @@ const LoginC = () => {
             <div className="animate__animated animate__fadeIn">
                 <Card elevation={5}>
                     <CardContent>
-                        <Typography variant="h5">Login</Typography>
+                        <Typography variant="srOnly">Login</Typography>
                         <Formik
                             initialValues={initialValues} onSubmit={async (values, formikHelpers) => {
 
-                            const {data:{login:res}} = await login({
+                            const {data: {login: res}} = await login({
                                 variables: values
                             })
 
@@ -62,17 +62,22 @@ const LoginC = () => {
                                             <Field name="pass" type="password" as={TextField} label="Password"/>
                                         </FormGroup>
                                     </Box>
-                                    <Button
-                                        variant="contained"
-                                        type="submit"
-                                        color="primary"
-                                        startIcon={isSubmitting ? <CircularProgress size={24}/> : <UploadIcon/>}
-                                        disabled={isSubmitting}>
-                                        Login
-                                    </Button>
+                                    <Box marginBottom={2}>
+                                        <Button
+                                            variant="contained"
+                                            type="submit"
+                                            color="primary"
+                                            startIcon={isSubmitting ? <CircularProgress size={24}/> : null}
+                                            disabled={isSubmitting}>
+                                            Login
+                                        </Button>
+                                    </Box>
                                 </Form>
                             )}
                         </Formik>
+                        <Box marginBottom={2}>
+                            <GoogleButton/>
+                        </Box>
                     </CardContent>
                 </Card>
             </div>

@@ -1,6 +1,5 @@
 import React, {useState} from "react";
-import {Container} from "next/app";
-import GoogleButton from "../components/GoogleButton";
+import GoogleButton from "../components/auth/GoogleButton";
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
